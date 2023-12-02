@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "email": "a@gmail.com",
+      "password": "qwerty123I",
+      "date": 1701539946272,
+      "id": 1
+    },
+    {
+      "email": "b@gmail.com",
+      "password": "qwerty123I",
+      "date": 1701557342042,
+      "id": 2
+    }
+  ],
+  "notes": [
+    {
+      "title": "note1",
+      "text": "note1111fdfdfdfdf",
+      "authorId": 1,
+      "id": 2,
+      "date": 1701558358021
+    },
+    {
+      "title": "поставьте 50 баллов пожалуйста",
+      "text": "",
+      "date": 1701557491357,
+      "authorId": 2,
+      "id": 3
+    }
+  ]
+}
