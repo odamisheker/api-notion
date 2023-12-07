@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../components/UserContextProvider";
 import { Link, useNavigate } from "react-router-dom";
+import { serverRequest } from "../util/App";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,8 +17,8 @@ export default function Login() {
       email,
       password,
     }).toString();
-    fetch(`http://localhost:5001/users?${query}`)
-      .then((r) => r.json())
+    serverRequest
+      .getUserByEmail(email)
       .then((users) => users[0])
       .then((user) => {
         if (user) {

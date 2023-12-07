@@ -10,6 +10,9 @@ import Notes from "../router/NoteList";
 import CreateNote from "../router/CreateNote";
 import EditNote from "../router/EditNote";
 import ViewNote from "../router/ViewNote";
+import { API } from "./api";
+
+export const serverRequest = new API("http://localhost:5001");
 
 const router = createBrowserRouter([
   {

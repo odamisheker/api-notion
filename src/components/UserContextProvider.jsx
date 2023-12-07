@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { serverRequest } from "../util/App";
 
 export const UserContext = createContext(null);
 
@@ -10,19 +11,17 @@ export default function UserContextProvider({ children }) {
     setLoading(true);
     const id = localStorage.getItem("userId");
     if (id) {
-      fetch(`http://localhost:5001/users?id=${id}`)
-        .then((r) => r.json())
-        .then((users) => users[0])
+      serverRequest
+        .getUser(id)
         .then((user) => {
           setUser(user);
           setLoading(false);
         })
         .finally(() => {
-            setLoading(false)
-        })
-    }
-    else {
-        setLoading(false)
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
   }, []);
 

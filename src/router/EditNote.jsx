@@ -3,6 +3,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import { UserContext } from "../components/UserContextProvider";
 import NoteForm from "../components/NoteForm";
+import { serverRequest } from "../util/App";
 
 export default function EditNote() {
   const { user } = useContext(UserContext);
@@ -14,8 +15,8 @@ export default function EditNote() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5001/notes/${id}`)
-      .then((response) => response.json())
+    serverRequest
+      .getNote(id)
       .then((data) => {
         if (data.authorId === user.id) {
           setNote(data);
@@ -25,27 +26,15 @@ export default function EditNote() {
           navigate("/notes");
         }
       })
-      .catch((error) => console.error("Error fetching note:", error));
+      .catch((error) => console.error("Error fetching note: ", error));
   }, [id, user.id, navigate]);
 
   const updateNote = async (id, updatedNote) => {
     try {
-      const response = await fetch(`http://localhost:5001/notes/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedNote),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update note");
-      }
-
-      const updatedNoteData = await response.json();
-      return updatedNoteData;
+      await serverRequest.editNote(id, updatedNote);
+      navigate(`/view-note/${id}`);
     } catch (error) {
-      console.error("Error updating note:", error);
+      console.error("Error updating note: ", error);
     }
   };
 
@@ -66,9 +55,7 @@ export default function EditNote() {
         date: Date.now(),
       };
 
-      updateNote(id, updatedNote).then((updatedNoteData) => {
-        navigate(`/view-note/${id}`);
-      });
+      updateNote(id, updatedNote);
     }
   };
 

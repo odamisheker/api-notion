@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import { UserContext } from "../components/UserContextProvider";
 import NoteForm from "../components/NoteForm";
+import { serverRequest } from "../util/App";
 
 export default function CreateNote() {
   const { user } = useContext(UserContext);
@@ -27,18 +28,12 @@ export default function CreateNote() {
         authorId: user.id,
       };
 
-      fetch("http://localhost:5001/notes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newNote),
-      })
-        .then((response) => response.json())
+      serverRequest
+        .addNote(newNote)
         .then((createdNote) => {
           navigate(`/view-note/${createdNote.id}`);
         })
-        .catch((error) => console.error("Error creating note:", error));
+        .catch((error) => console.error("Error creating note: ", error));
     }
   };
 

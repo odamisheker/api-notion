@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../components/UserContextProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { IconButton, Typography, Container } from "@mui/material";
+import { serverRequest } from "../util/App";
 
 export default function Notes() {
   const { user } = useContext(UserContext);
@@ -18,25 +19,21 @@ export default function Notes() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:5001/notes?authorId=${user.id}`)
-      .then((response) => response.json())
+    serverRequest
+      .getNotes(user.id)
       .then((data) => setNotes(data))
-      .catch((error) => console.error("Error fetching notes:", error));
+      .catch((error) => console.error("Error fetching notes: ", error));
   }, [user.id]);
 
   const handleDeleteNote = (noteId, e) => {
     e.stopPropagation();
 
-    fetch(`http://localhost:5001/notes/${noteId}`, {
-      method: "DELETE",
-    })
-      .then(() => {
-        fetch(`http://localhost:5001/notes?authorId=${user.id}`)
-          .then((response) => response.json())
-          .then((data) => setNotes(data))
-          .catch((error) => console.error("Error fetching notes:", error));
-      })
-      .catch((error) => console.error("Error deleting note:", error));
+    serverRequest.deleteNote(noteId).then(() => {
+      serverRequest
+        .getNotes(user.id)
+        .then((data) => setNotes(data))
+        .catch((error) => console.error("Error deleting note:", error));
+    });
   };
 
   const sortedNotes = notes.sort((a, b) => b.date - a.date);
@@ -96,5 +93,4 @@ export default function Notes() {
       </div>
     </Container>
   );
-};
-
+}

@@ -4,30 +4,17 @@ import { useContext } from "react";
 import { UserContext } from "../components/UserContextProvider";
 
 export default function Layout() {
-  const { onChange} = useContext(UserContext);
+  const { onChange } = useContext(UserContext);
 
   const handleLogOut = () => {
     onChange(null);
     localStorage.clear();
-  }
+  };
 
   return (
     <div>
-      <AppBar position="static" style={{background: "grey"}}>
+      <AppBar position="static" style={{ background: "grey" }}>
         <Toolbar>
-          <Link
-            to="/login"
-            style={{
-              marginRight: "20px",
-              color: "white",
-              textDecoration: "none",
-            }}
-          >
-            <Typography variant="h6">Login</Typography>
-          </Link>
-          <Link to="/signup" style={{ color: "white", textDecoration: "none" }}>
-            <Typography variant="h6">Sign Up</Typography>
-          </Link>
           <Link
             onClick={handleLogOut}
             to="/"

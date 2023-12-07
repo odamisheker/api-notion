@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { User } from "../util/validation";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { serverRequest } from "../util/App";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -18,18 +19,10 @@ const SignUp = () => {
       if (password !== confirmPassword) {
         setErrors("Пароли не совпадают");
       }
-      const response = await fetch("http://localhost:5001/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      await serverRequest.addUser(userData);
 
-      if (response.ok) {
-        navigate("/");
-        setErrors(null);
-      }
+      navigate("/");
+      setErrors(null);
     } catch (err) {
       if (err instanceof z.ZodError) {
         setErrors(err.format());

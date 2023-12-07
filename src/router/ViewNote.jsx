@@ -2,16 +2,17 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { Container, Typography, IconButton } from "@mui/material";
 import { UserContext } from "../components/UserContextProvider";
+import { serverRequest } from "../util/App";
 
-export default function ViewNote () {
+export default function ViewNote() {
   const { user } = useContext(UserContext);
   const { id } = useParams();
   const [note, setNote] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5001/notes/${id}`)
-      .then((response) => response.json())
+    serverRequest
+      .getNote(id)
       .then((data) => {
         if (data.authorId === user.id) {
           setNote(data);
@@ -19,7 +20,7 @@ export default function ViewNote () {
           navigate("/notes");
         }
       })
-      .catch((error) => console.error("Error fetching note:", error));
+      .catch((error) => console.error("Error fetching note: ", error));
   }, [id, user.id, navigate]);
 
   const handleEditNote = () => {
@@ -27,9 +28,8 @@ export default function ViewNote () {
   };
 
   const handleDeleteNote = () => {
-    fetch(`http://localhost:5001/notes/${id}`, {
-      method: "DELETE",
-    })
+    serverRequest
+      .deleteNote(id)
       .then(() => {
         navigate("/notes");
       })
@@ -53,10 +53,7 @@ export default function ViewNote () {
         >
           🗑️
         </IconButton>
-        <Link
-          to="/notes"
-          className="text-blue-500 hover:underline"
-        >
+        <Link to="/notes" className="text-blue-500 hover:underline">
           Back to Notes
         </Link>
       </div>
@@ -68,5 +65,4 @@ export default function ViewNote () {
       </Typography>
     </Container>
   );
-};
-
+}
